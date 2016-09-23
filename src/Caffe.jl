@@ -226,12 +226,204 @@ end
 
 
 
+"""    parseLog(LogFile::ASCIIString) 
+Extracts relevant values of  the training and testing process. It returns two matrices. 
+The first shows the test data and the  second the training data.
+
+Usage:
+
+testOut, trainOut = parseLog(LogFile::ASCIIString) 
+
+The columns of each matrix have the following meaning:
+
+trainOut = [(Iteration) (Time in seconds) (Learning rate) (Loss)]
+
+testOut= [(Iteration) (Time in seconds) (Accuracy) (Loss)]
+ """
+function parseLog(log::ASCIIString)
+    
+    f=open(log)
+    l=readlines(f)
+    close(f)
+    
+    
+    ##################################
+    #####  Generate train output  ####
+    ##################################
+    k=0
+    for i=1:length(l)
+        if ismatch(r"Solving", l[i])
+            # get the solving keyword to know that the solving started and get the start time
+            k=i
+
+        end
+    end
+
+    # Extract start time
+
+    if ismatch(r"(?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+.\d+)", l[k])
+        a=match(r"(?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+.\d\d\d)", l[k])
+    end
+
+
+    startTime=DateTime(a.match, "H:M:S.s")
+
+    
+    iteration=[]
+    loss=[]
+    time_loss=[]
+
+    for i = 1:length(l)
+        if ismatch(r"Iteration (\d+), loss = ([\.\deE+-]+)", l[i])
+            It=match(r"Iteration (\d+), loss = ([\.\deE+-]+)", l[i]) #get Iteration and loss
+            #println(It)
+            # now get the 
+            push!(iteration, parse(Int64, It[:1]))
+            push!(loss, parse(Float64, It[:2]))
+            #break
+
+            # get time
+
+            b=match(r"(?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+.\d\d\d)", l[i])
+            push!(time_loss, DateTime(b.match, "H:M:S.s"))
+
+
+
+
+        end
+
+    end
+    
+    lr=[]
+    iteration_lr=[]
+    for i = 1:length(l)
+        if ismatch(r"Iteration (\d+), lr = ([\.\deE+-]+)", l[i])
+            It=match(r"Iteration (\d+), lr = ([\.\deE+-]+)", l[i]) #get Iteration and loss
+            #println(It)
+            # now get the 
+            push!(iteration_lr, parse(Int64, It[:1]))
+            push!(lr, parse(Float64, It[:2]))
+            #break
+        end
+
+    end
+    
+    # Time calculation
+    time_milliseconds=[]
+
+    for i=1:length(time_loss)
+        a=time_loss[i]-startTime
+        push!(time_milliseconds, (a.value))
+
+    end
+    time_seconds=time_milliseconds/1000
+    
+    # generate the train output
+
+    trainOut=zeros(length(iteration), 4)
+    for i=1:4
+        for j=1:length(iteration)
+            trainOut[j,i]=NaN
+        end
+    end
+    # num Iterations, seconds, LR, loss
+
+    trainOut[:,1]=iteration;
+    trainOut[:,4]=loss;
+    trainOut[:,2]=time_seconds;
+
+    for i=1:size(trainOut,1)
+        for j=1:length(iteration_lr) 
+            if iteration_lr[j]==trainOut[i,1]
+                trainOut[i,3]=lr[j]
+            end
+
+        end
+
+    end
+    
+    
+    ##################################
+    #####   Generate test output  ####
+    ##################################
+    
+    iteration_test=[]
+    loss_test=[]
+    accuracy_test=[]
+    time_test=[]
+
+    for i = 1:length(l)
+        if ismatch(r"Iteration (\d+), Testing net", l[i])
+
+            b=match(r"(?P<hour>\d+):(?P<minute>\d+):(?P<second>\d+.\d\d\d)", l[i])
+            push!(time_test, DateTime(b.match, "H:M:S.s"))
+
+
+            It=match(r"Iteration (\d+), Testing net", l[i]) #get Iteration and loss
+            #println(It)
+
+            push!(iteration_test, parse(Int64, It[:1]))
+
+
+            # get accuracy and loss and time
+            for j=i+1:i+5
+                if ismatch(r"Test net output #(\d+): loss = ([\.\deE+-]+)", l[j])
+                    M=match(r"Test net output #(\d+): loss = ([\.\deE+-]+)", l[j])
+                    push!(loss_test, parse(Float64, M[:2]))
+                    #println(M)
+                #else
+                    #push!(loss_test, NaN)
+                end
+            end
+
+            for j=i+1:i+5
+                if ismatch(r"Test net output #(\d+): accuracy = ([\.\deE+-]+)", l[j])
+                    M=match(r"Test net output #(\d+): accuracy = ([\.\deE+-]+)", l[j])
+                    push!(accuracy_test, parse(Float64, M[:2]))
+                    #println(M)
+                #else
+                    #push!(loss_test, NaN)
+                end
+            end
+
+
+        end
+
+    end
+
+    time_milliseconds_test=[]
+
+    for i=1:length(time_test)
+        a=time_test[i]-startTime
+        push!(time_milliseconds_test, (a.value))
+
+    end
+    time_seconds_test=time_milliseconds_test/1000
+
+    testOut=zeros(length(iteration_test), 4)
+    for i=1:4
+        for j=1:length(iteration_test)
+            testOut[j,i]=NaN
+        end
+    end
+
+    testOut[:,1]=iteration_test
+    testOut[:,2]=time_seconds_test
+    testOut[:,3]=accuracy_test
+    testOut[:,4]=loss_test
+    
+    
+    
+    return testOut, trainOut
+    
+    
+end
 
 
 
 
 
-export removeLayer!, Net, solve #, parseLog
+export removeLayer!, Net, solve, parseLog
 export saveNet, saveSolver
 export addImageDataLayer!, addDataBaseLayer!, addHDF5DataLayer!, addPowerLayer!, addBNLLLayer!
 export addAbsValLayer!, addTanHLayer!, addSigmoidLayer!, addInfogainLossLayer!
