@@ -1,0 +1,156 @@
+name: "LeNet"
+layer { 
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  data_param {
+    source: "mnist_train_lmdb"
+    batch_size: 64
+    backend: LMDB
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  include {
+    phase: TRAIN
+  }
+}
+layer { 
+  name: "mnist2"
+  type: "Data"
+  top: "data"
+  top: "label"
+  data_param {
+    source: "mnist_test_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  include {
+    phase: TEST
+  }
+}
+layer { 
+  name: "conv1"
+  type: "Convolution"
+  top: "conv1"
+  bottom: "data"
+  param {  lr_mult: 1 decay_mult: 0  }
+  param {  lr_mult: 2 decay_mult: 0  }
+  convolution_param {
+    num_output: 20
+    kernel_size: 5
+    stride: 1
+    weight_filler { 
+      type: "xavier"
+    }
+    bias_filler { 
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer { 
+  name: "pool1"
+  type: "Pooling"
+  top: "pool1"
+  bottom: "conv1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer { 
+  name: "conv2"
+  type: "Convolution"
+  top: "conv2"
+  bottom: "pool1"
+  param {  lr_mult: 1 decay_mult: 0  }
+  param {  lr_mult: 2 decay_mult: 0  }
+  convolution_param {
+    num_output: 50
+    kernel_size: 5
+    stride: 1
+    weight_filler { 
+      type: "xavier"
+    }
+    bias_filler { 
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer { 
+  name: "pool2"
+  type: "Pooling"
+  top: "pool2"
+  bottom: "conv2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer { 
+  name: "ip1"
+  type: "InnerProduct"
+  top: "ip1"
+  bottom: "pool2"
+  param {  lr_mult: 1 decay_mult: 0  }
+  param {  lr_mult: 2 decay_mult: 0  }
+  inner_product_param {
+    num_output: 500
+    weight_filler { 
+      type: "xavier"
+  }
+  bias_filler { 
+    type: "constant"
+    value: 0.0
+    }
+  }
+}
+layer { 
+  name: "relu1"
+  type: "ReLU"
+  top: "ip1"
+  bottom: "ip1"
+}
+layer { 
+  name: "ip2"
+  type: "InnerProduct"
+  top: "ip2"
+  bottom: "ip1"
+  param {  lr_mult: 1 decay_mult: 0  }
+  param {  lr_mult: 2 decay_mult: 0  }
+  inner_product_param {
+    num_output: 10
+    weight_filler { 
+      type: "xavier"
+  }
+  bias_filler { 
+    type: "constant"
+    value: 0.0
+    }
+  }
+}
+layer { 
+  name: "accuracy"
+  type: "Accuracy"
+  top: "accuracy"
+  bottom: "ip2"
+  bottom: "label"
+  include {
+    phase: TEST
+  }
+}
+layer { 
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  top: "loss"
+  bottom: "ip2"
+  bottom: "label"
+}

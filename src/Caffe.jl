@@ -1,5 +1,7 @@
 module Caffe
 
+using Compat
+import Compat: UTF8String, ASCIIString
 
 # Abstract type definition
 abstract AbstractNeuralNet
@@ -8,7 +10,7 @@ abstract AbstractLayer <: AbstractNeuralNet
 
 # Definition of the neural network type
 type NeuralNet <: AbstractNeuralNet
-    name::ASCIIString
+    name::String
     Layers::Array{AbstractLayer,1}  
 end
 
@@ -18,7 +20,7 @@ function Net(;name="Net")
     
 end
 
-function NameInUse(n::NeuralNet, name::ASCIIString)
+function NameInUse(n::NeuralNet, name::String)
     b::Bool=false
     
     if length(n.Layers)>0
@@ -40,6 +42,11 @@ include("FileIO.jl")
 
 
 localpath=string(dirname(Base.source_path()), "/Files")
+
+if ~isdir(localpath)
+     mkdir(localpath)
+end
+
 
 
 
@@ -240,7 +247,7 @@ trainOut = [(Iteration) (Time in seconds) (Learning rate) (Loss)]
 
 testOut= [(Iteration) (Time in seconds) (Accuracy) (Loss)]
  """
-function parseLog(log::ASCIIString)
+function parseLog(log::String)
     
     f=open(log)
     l=readlines(f)

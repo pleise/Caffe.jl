@@ -4,9 +4,9 @@
 
 
 type ConvLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
     bias_term::Bool # whether have a bias or not #optional in caffe
     
@@ -31,12 +31,12 @@ type ConvLayer <: AbstractLayer
     pad_h::Int64  #optinoal in caffe
     pad_w::Int64  #optinoal in caffe
     
-    weight_filler_type::ASCIIString
+    weight_filler_type::String
     std_gausian_filler::Float64
-    bias_filler_type::ASCIIString
+    bias_filler_type::String
     bias_filler_value::Float64
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -69,16 +69,16 @@ function addConvLayer!(n ;name="", bottomLayer="", topLayer="",  bias_term=true,
 end
 
 type PoolingLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
     kernel::Int64
     kernel_h::Int64
     kernel_w::Int64
     
     #optinoal in caffe
-    pool_type::ASCIIString #MAX (default), AVE, STOCHASTIC
+    pool_type::String #MAX (default), AVE, STOCHASTIC
     
     pad::Int64
     pad_h::Int64
@@ -88,7 +88,7 @@ type PoolingLayer <: AbstractLayer
     stride_h::Int64
     stride_w::Int64
    
-    phase::ASCIIString
+    phase::String
  
 end
 
@@ -118,9 +118,9 @@ end
 
 type InnerProductLayer <: AbstractLayer
     
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
     #Convolution parameters:
     num_output::Int64
@@ -135,12 +135,12 @@ type InnerProductLayer <: AbstractLayer
     
     
     
-    weight_filler_type::ASCIIString #strongly recommended to use "constant" (default) or "gaussian"
+    weight_filler_type::String #strongly recommended to use "constant" (default) or "gaussian"
     std_gausian_filler::Float64
-    bias_filler_type::ASCIIString
+    bias_filler_type::String
     bias_filler_value::Float64
     
-    phase::ASCIIString
+    phase::String
     
     
 end
@@ -173,11 +173,11 @@ function addIPLayer!(n ;name="", bottomLayer="", topLayer="",  num_output=0, bia
 end
 
 type SoftMaxLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::Array{ASCIIString, 1}
-    top::Array{ASCIIString, 1}
+    name::String
+    bottom::Array{String, 1}
+    top::Array{String, 1}
     
-    phase::ASCIIString
+    phase::String
     
 end
 
@@ -204,11 +204,11 @@ function addSoftMaxLayer!(n ;name="", bottomLayer=[""], topLayer=[""], phase="")
 end
 
 type ReLULayer <: AbstractLayer
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
-    phase::ASCIIString
+    phase::String
    
 end
 
@@ -237,11 +237,11 @@ end
 
 
 type SoftmaxWithLossLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::Array{ASCIIString, 1}
-    top::Array{ASCIIString, 1}   
+    name::String
+    bottom::Array{String, 1}
+    top::Array{String, 1}   
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -270,12 +270,12 @@ end
 
 
 type HingeLossLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::Array{ASCIIString, 1}
-    top::Array{ASCIIString, 1}  
-    norm::ASCIIString # L1 or L2
+    name::String
+    bottom::Array{String, 1}
+    top::Array{String, 1}  
+    norm::String # L1 or L2
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -304,11 +304,11 @@ end
 
 
 type SigmoidCrossEntropyLossLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::Array{ASCIIString, 1}
-    top::Array{ASCIIString, 1} 
+    name::String
+    bottom::Array{String, 1}
+    top::Array{String, 1} 
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -337,11 +337,11 @@ end
 
 
 type InfogainLossLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::Array{ASCIIString, 1}
-    top::Array{ASCIIString, 1}   
+    name::String
+    bottom::Array{String, 1}
+    top::Array{String, 1}   
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -370,10 +370,10 @@ end
 
 
 type AccuracyLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::Array{ASCIIString, 1}
-    top::Array{ASCIIString, 1}   
-    phase::ASCIIString
+    name::String
+    bottom::Array{String, 1}
+    top::Array{String, 1}   
+    phase::String
     
 end
 
@@ -403,11 +403,11 @@ end
 
 
 type SigmoidLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -435,11 +435,11 @@ end
 
 
 type TanHLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -466,11 +466,11 @@ function addTanHLayer!(n ;name="", bottomLayer="", topLayer="", phase="")
 end
 
 type AbsValLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -499,11 +499,11 @@ end
 
 
 type BNLLLayer <: AbstractLayer
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
-    phase::ASCIIString
+    phase::String
 end
 
 
@@ -534,16 +534,16 @@ end
 
 type PowerLayer <: AbstractLayer
     
-    name::ASCIIString
-    bottom::ASCIIString
-    top::ASCIIString
+    name::String
+    bottom::String
+    top::String
     
     #output=(shift + scale * input) ^ power 
     power::Float64
     scale::Float64
     shift::Float64
     
-    phase::ASCIIString
+    phase::String
     
 end
 
@@ -574,13 +574,13 @@ end
 
 
 type HDF5DataLayer <: AbstractLayer
-    name::ASCIIString
-    top::Array{ASCIIString, 1}
+    name::String
+    top::Array{String, 1}
     
-    source::Array{ASCIIString, 1}
+    source::Array{String, 1}
     batch_size::Int64
     
-    phase::ASCIIString
+    phase::String
     
     
 end
@@ -611,16 +611,16 @@ end
 
 
 type DataBaseLayer <: AbstractLayer
-    name::ASCIIString
-    top::Array{ASCIIString, 1}
+    name::String
+    top::Array{String, 1}
     
-    source::Array{ASCIIString, 1}
+    source::Array{String, 1}
     batch_size::Int64
     
     rand_skip::Int64
-    backend::ASCIIString
+    backend::String
     
-    phase::ASCIIString
+    phase::String
     scale::Float64
        
 end
@@ -651,10 +651,10 @@ end
 
 
 type ImageDataLayer <: AbstractLayer
-    name::ASCIIString
-    top::Array{ASCIIString, 1}
+    name::String
+    top::Array{String, 1}
     
-    source::Array{ASCIIString, 1}
+    source::Array{String, 1}
     batch_size::Int64
     
     rand_skip::Int64
@@ -663,7 +663,7 @@ type ImageDataLayer <: AbstractLayer
     new_height::Int64
     new_width::Int64
     
-    phase::ASCIIString
+    phase::String
        
 end
 
@@ -693,7 +693,7 @@ end
 
 
 
-function removeLayer!(n::NeuralNet, name::ASCIIString)
+function removeLayer!(n::NeuralNet, name::String)
     k=0
     k2=0
     for i in n.Layers

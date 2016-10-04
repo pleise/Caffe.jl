@@ -4,7 +4,7 @@
 
 
 
-function saveNet(n::NeuralNet, pathname::ASCIIString)
+function saveNet(n::NeuralNet, pathname::String)
     f=open(pathname, "w")
     write(f, string("name: \"", n.name, "\"\n" )) #Gesamte Netzwerkname
     for I=1:length(n.Layers)
@@ -13,7 +13,7 @@ function saveNet(n::NeuralNet, pathname::ASCIIString)
     close(f)
 end
 
-function saveSolver(s::AbstractSolver, pathname::ASCIIString, path2net::ASCIIString)
+function saveSolver(s::AbstractSolver, pathname::String, path2net::String)
     f=open(pathname, "w")
     writesolver2file(s, path2net)
     close(f)
@@ -22,7 +22,7 @@ end
 
 
 
-#### Additional functions: readNet(path::ASCIIString), readSolver(path::ASCIIString)
+#### Additional functions: readNet(path::String), readSolver(path::String)
 #### Implementation follows soon!
 
 

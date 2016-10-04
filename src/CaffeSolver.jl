@@ -9,7 +9,7 @@ type CaffeSGD <: CaffeSolver
     weight_decay::Float64# = 0.0005
     
     # The learning rate policy
-    lr_policy::ASCIIString# = "\"inv\"" or "\"fixed\""
+    lr_policy::String# = "\"inv\"" or "\"fixed\""
     gamma::Float64# = 0.0001
     power::Float64# = 0.75
     
@@ -25,11 +25,11 @@ type CaffeSGD <: CaffeSolver
     
     # snapshot intermediate results
     snapshot::Int64# = 5000
-    snapshot_prefix::ASCIIString# = /example/mnist
+    snapshot_prefix::String# = /example/mnist
     
     # solver mode: CPU or GPU
-    solver_mode::ASCIIString# = "CPU"
-    #solver_type::ASCIIString# ="\"SGD\"" or Adam, AdamGrad, Nestreov, RMSProp
+    solver_mode::String# = "CPU"
+    #solver_type::String# ="\"SGD\"" or Adam, AdamGrad, Nestreov, RMSProp
     
  
 end
@@ -44,7 +44,7 @@ type CaffeAdam <: CaffeSolver
     #weight_decay::Float64# = 0.0005
     
     # The learning rate policy
-    lr_policy::ASCIIString# = "\"inv\"" or "\"fixed\""
+    lr_policy::String# = "\"inv\"" or "\"fixed\""
     #gamma::Float64# = 0.0001
     #power::Float64# = 0.75
     
@@ -60,11 +60,11 @@ type CaffeAdam <: CaffeSolver
     
     # snapshot intermediate results
     snapshot::Int64# = 5000
-    snapshot_prefix::ASCIIString# = /example/mnist
+    snapshot_prefix::String# = /example/mnist
     
     # solver mode: CPU or GPU
-    solver_mode::ASCIIString# = "CPU"
-    #solver_type::ASCIIString# ="\"SGD\"" or Adam, AdamGrad, Nestreov, RMSProp
+    solver_mode::String# = "CPU"
+    #solver_type::String# ="\"SGD\"" or Adam, AdamGrad, Nestreov, RMSProp
     
 end
 
