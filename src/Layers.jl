@@ -93,10 +93,10 @@ type PoolingLayer <: AbstractLayer
 end
 
 function addPoolingLayer!(n ; name="", bottom="", top="", kernel=0, kernel_h=0, kernel_w=0, pool_type="", pad=0, pad_h=0, pad_w=0,
-    strid=0, stride_h=0, stride_w=0, phase="")
+    stride=0, stride_h=0, stride_w=0, phase="")
     
     p=PoolingLayer(name, bottom, top, kernel, kernel_h, kernel_w, pool_type, pad, pad_h, pad_w,
-    strid, stride_h, stride_w, phase)
+    stride, stride_h, stride_w, phase)
     
     b=NameInUse(n, p.name)
     if b
@@ -119,8 +119,8 @@ end
 type InnerProductLayer <: AbstractLayer
     
     name::String
-    bottom::String
-    top::String
+    bottom::Array{String, 1}
+    top::Array{String, 1}
     
     #Convolution parameters:
     num_output::Int64
@@ -146,7 +146,7 @@ type InnerProductLayer <: AbstractLayer
 end
 
 
-function addIPLayer!(n ;name="", bottomLayer="", topLayer="",  num_output=0, bias_term=true, lr_mult_filter=0, decay_mult_filter=0,
+function addIPLayer!(n ;name="", bottomLayer=[""], topLayer=[""],  num_output=0, bias_term=true, lr_mult_filter=0, decay_mult_filter=0,
     lr_mult_bias=0, decay_mult_bias=0, weight_filler_type="", std_gaussian_filler=0, bias_filler_type="", 
     bias_filler_value=0, phase="")
     
@@ -838,8 +838,19 @@ function writeLayer2File(f, L::InnerProductLayer)
     write(f, string("  name: \"", L.name, "\"\n"))
     write(f, "  type: \"InnerProduct\"\n")
    
-    write(f, string("  top: \"", L.top, "\"\n"))
-    write(f, string("  bottom: \"", L.bottom, "\"\n"))
+
+    for i=1:length(L.top)
+        write(f, string("  top: \"", L.top[i], "\"\n"))
+    end
+    for j=1:length(L.bottom)
+        write(f, string("  bottom: \"", L.bottom[j], "\"\n"))
+    end
+
+
+    #write(f, string("  top: \"", L.top, "\"\n"))
+    #write(f, string("  bottom: \"", L.bottom, "\"\n"))
+
+
     write(f, "  param \{")
     write(f, string("  lr_mult: ", L.lr_mult_filter, " decay_mult: ", L.decay_mult_filter))
     write(f, "  \}\n")
