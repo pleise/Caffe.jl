@@ -1,5 +1,7 @@
 # Caffe interface for the [Julia] language
 
+### THIS PROJECT WILL NOT BE FURTHER MAINTAINED.
+
 [![Build Status](https://travis-ci.org/pleise/Caffe.jl.svg?branch=master)](https://travis-ci.org/pleise/Caffe.jl)
 
 This package provides an interface for Julia to the [Caffe] deep learning framework and a modelling language to model a neural network in Julia. Most of the functionality of Caffe is supported by this interface. But it is work in progress right now, so additional functionalities will be added in the future. Right now it is possible to define a arbitrary network and the SGD or Adam Solver settings and call Caffe with automatically created .prototxt files for the network and the solver. Furthermore the output can be saved in a log file for further processing. 
